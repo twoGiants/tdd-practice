@@ -58,11 +58,7 @@ func Test_afterTwoPushes_sizeIsTwo(t *testing.T) {
 }
 
 func Test_poppingEmptyStack_panicsWithUnderflow(t *testing.T) {
-	defer func() {
-		if v := recover(); v.(string) != "underflow" {
-			t.Fatal("should panic with an 'underflow' message but did with", v)
-		}
-	}()
+	defer recoverWithMessage("underflow", t)
 
 	stack := storage.NewStack()
 
@@ -102,5 +98,23 @@ func Test_afterPushingXandY_willPopYthenX(t *testing.T) {
 	popped = stack.Pop()
 	if popped != 99 {
 		t.Fatal("last pop should've been 99 but was", popped)
+	}
+}
+
+func Test_pushingFullStack_panicsWithOverflow(t *testing.T) {
+	defer recoverWithMessage("overflow", t)
+
+	stack := storage.NewStack()
+
+	stack.Push(1)
+	stack.Push(1)
+	stack.Push(1)
+
+	t.Fatal("should have panicked but didn't")
+}
+
+func recoverWithMessage(msg string, t *testing.T) {
+	if v := recover(); v.(string) != msg {
+		t.Fatalf("should panic with an '%s' message but did with %v", msg, v)
 	}
 }

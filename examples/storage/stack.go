@@ -14,6 +14,9 @@ func (s *Stack) IsEmpty() bool {
 }
 
 func (s *Stack) Push(element int) {
+	if s.size == len(s.elements) {
+		panic("overflow")
+	}
 	s.elements[s.size] = element
 	s.size += 1
 }
