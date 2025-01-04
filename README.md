@@ -1,5 +1,7 @@
 # TDD Practice
 
+[Go Refresher.](/docs/go-refresher.md)
+
 ## Rules
 
 Taken from *Clean Craftsmanship by Robert C. Martin*.
