@@ -33,6 +33,7 @@ Learning Go, 2nd Edition, Ch [9. Errors](https://learning.oreilly.com/library/vi
 
 - *error tree* is a series of wrapped errors
 - wrap errors using `fmt.Errorf` and `%w`, e.g. `fmt.Errorf("in fileChecker: %w", err)`
+    - see `refresher/errors/wrap.go`
 - instead of `errors.Unwrap` use `errors.Is` and `errors.As`
 - implement `Unwrap` to wrap errors with your custom error
 - if you want to create a new error that contains the message from another error, but don't want to wrap it use `%v`, e.g.
@@ -46,41 +47,16 @@ if err != nil {
 
 ### Wrapping Multiple Errors
 
-- for e.g. validation when you need to return an error for each field use `errors.Join`
+- for e.g. validation when you need to return an error for each field use `errors.Join`, see `refresher/errors/wrapMultiple.go`
+- another way to merge errors is using multiple `%w`, see `refresher/errors/wrapMultiple.go`
 
-```go
-type Person struct {
-    FirstName string
-    LastName  string
-    Age       int
-}
+### Is and As
 
-func ValidatePerson(p Person) error {
-    var errs []error
-    if len(p.FirstName) == 0 {
-        errs = append(errs, errors.New("field FirstName cannot be empty"))
-    }
-    if len(p.LastName) == 0 {
-        errs = append(errs, errors.New("field LastName cannot be empty"))
-    }
-    if p.Age < 0 {
-        errs = append(errs, errors.New("field Age cannot be negative"))
-    }
-    if len(errs) > 0 {
-        return errors.Join(errs...)
-    }
-    return nil
-}
-```
-
-- another way to merge errors is using multiple `%w`
-
-```go
-err1 := errors.New("first error")
-err2 := errors.New("second error")
-err3 := errors.New("third error")
-err := fmt.Errorf("first: %w, second: %w, third: %w", err1, err2, err3)
-```
+- use `errors.Is` to check for sentinel errors in the error tree, it uses `==` internally, see `refresher/errors/is.go`
+- for noncomparable types implement the `Is` method, see `refresher/errors/isImpl.go`
+- for errors that aren't identical instances which you want to pattern match, see `refresher/errors/isPatternMatch.go`
+- `error.As` allows to check if the error matches a specific type which you have to declare with `var` and then use the pointer of, see `refresher/errors/as.go`
+- use `errors.Is` when you look for an *instance* or specific *values* and `errors.As` when you are looking for a specific *type*
 
 ***
 
