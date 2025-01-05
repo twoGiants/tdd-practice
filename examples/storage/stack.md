@@ -19,8 +19,8 @@ We can derive the following test cases from the logic above:
 - after one push is not empty
 - after one push and pop is empty
 - after two pushes size is two
-- popping empty stack panics with underflow
-- pushing full stack panics with overflow
+- popping empty stack errors with underflow
+- pushing full stack errors with overflow
 - pushing X will pop X
 - pushing X and Y will pop Y and then X
 
@@ -34,3 +34,4 @@ Same as above but with a firs-in-first-out queue. Use a fixed size array. Use tw
 1. 64m - 25.12.24, *[x] retained; used different test names*
 1. 29m - 25.12.24, *[x] retained; used same test names*
 1. 14m - 28.12.24, *[x] retained*
+1. 27m - 04.01.24, *miss: forgot one test case "after two pushes size is two"; retained code; implemented new version with error return instead of panic*
